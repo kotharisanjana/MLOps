@@ -5,15 +5,15 @@ from transformers import AutoTokenizer
 
 
 class Data(torch.utils.data.Dataset):
-    def __init__(self, model_name, batch_size):
-        self.batch_size = batch_size
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+    def __init__(self, params):
+        self.batch_size = params["batch_size"]
+        self.tokenizer = AutoTokenizer.from_pretrained(params["model_name"])
 
     def load_data(self):
         dataset = load_dataset("glue", "cola")
-        self.train_data = dataset["train"]
-        self.val_data = dataset["validation"]
-        self.test_data = dataset["test"]
+        self.train_data = dataset["train"].select(range(32))
+        self.val_data = dataset["validation"].select(range(32))
+        self.test_data = dataset["test"].select(range(32))
         
     def tokenize_data(self, example):
         return self.tokenizer(
