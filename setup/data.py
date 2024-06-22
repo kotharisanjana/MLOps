@@ -1,8 +1,10 @@
 import torch
 from torch.utils.data import DataLoader
-from datasets import load_dataset
+import datasets
 from transformers import AutoTokenizer
+import mlflow
 
+# https://huggingface.co/datasets/nyu-mll/glue/viewer/cola
 
 class Data(torch.utils.data.Dataset):
     def __init__(self, params):
@@ -10,8 +12,8 @@ class Data(torch.utils.data.Dataset):
         self.tokenizer = AutoTokenizer.from_pretrained(params["model_name"])
 
     def load_data(self):
-        dataset = load_dataset("glue", "cola")
-        self.train_data = dataset["train"].select(range(32))
+        dataset = datasets.load_dataset("glue", "cola")
+        self.train_data = dataset["train"].select(range(128))
         self.val_data = dataset["validation"].select(range(32))
         self.test_data = dataset["test"].select(range(32))
         
@@ -23,7 +25,13 @@ class Data(torch.utils.data.Dataset):
             max_length=512,
         )
 
-    def prepare_data(self):
+    def prepare_logging_data(self):
+        train_dataset = mlflow.data.huggingface_dataset.from_huggingface(self.train_data, "train_data")
+        val_dataset = mlflow.data.huggingface_dataset.from_huggingface(self.val_data, "val_data")
+        test_dataset = mlflow.data.huggingface_dataset.from_huggingface(self.test_data, "test_data")
+        return train_dataset, val_dataset, test_dataset
+
+    def prepare_modeling_data(self):
         self.train_data = self.train_data.map(self.tokenize_data, batched=True)
         self.train_data.set_format(
             type="torch", columns=["input_ids", "attention_mask", "label"]
@@ -39,17 +47,17 @@ class Data(torch.utils.data.Dataset):
             type="torch", columns=["input_ids", "attention_mask", "label"]
         )
 
-    def setup_train_dataloader(self):
-        return DataLoader(
+    def setup_dataloaders(self):
+        train_dataloader = DataLoader(
             self.train_data, batch_size=self.batch_size, shuffle=True
         )
 
-    def setup_val_dataloader(self):
-        return DataLoader(
-            self.val_data, batch_size=self.batch_size, shuffle=False
+        val_dataloader = DataLoader(
+            self.val_data, batch_size=self.batch_size, shuffle=True
         )
     
-    def setup_test_dataloader(self):
-        return torch.utils.data.DataLoader(
+        test_dataloader = DataLoader(
             self.test_data, batch_size=self.batch_size, shuffle=False
         )
+
+        return train_dataloader, val_dataloader, test_dataloader
