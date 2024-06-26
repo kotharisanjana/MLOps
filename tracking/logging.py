@@ -15,7 +15,7 @@ def log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch):
         },
         step=epoch, 
     )
-
+ 
 def log_model(model):
     model_info = mlflow.pytorch.log_model(model, "classification_model")
     return model_info

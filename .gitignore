@@ -127,4 +127,4 @@ dmypy.json
 # mlflow
 mlruns/
 mlartifacts/
-.history
+.history/

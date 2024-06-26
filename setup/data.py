@@ -15,7 +15,7 @@ class Data(torch.utils.data.Dataset):
         dataset = datasets.load_dataset("glue", "cola")
         self.train_data = dataset["train"].select(range(128))
         self.val_data = dataset["validation"].select(range(32))
-        self.test_data = dataset["test"].select(range(32))
+        self.test_data = dataset["test"].select(range(16))
         
     def tokenize_data(self, example):
         return self.tokenizer(
