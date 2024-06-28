@@ -3,11 +3,10 @@ from transformers import AutoModel
 
 
 class Model(nn.Module):
-    def __init__(self, model_name):
+    def __init__(self, cfg):
         super(Model, self).__init__()
-        self.model = AutoModel.from_pretrained(model_name)
-        self.W = nn.Linear(self.model.config.hidden_size, 2)
-        self.num_classes = 2
+        self.model = AutoModel.from_pretrained(cfg.model.model)
+        self.W = nn.Linear(self.model.config.hidden_size, cfg.model.num_classes)
 
     def forward(self, input_ids, attention_mask):
         outputs = self.model(input_ids=input_ids, attention_mask=attention_mask)

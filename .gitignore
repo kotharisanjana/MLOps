@@ -128,3 +128,6 @@ dmypy.json
 mlruns/
 mlartifacts/
 .history/
+
+# hydra
+outputs/

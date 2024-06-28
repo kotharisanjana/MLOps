@@ -7,22 +7,27 @@ import mlflow
 # https://huggingface.co/datasets/nyu-mll/glue/viewer/cola
 
 class Data(torch.utils.data.Dataset):
-    def __init__(self, params):
-        self.batch_size = params["batch_size"]
-        self.tokenizer = AutoTokenizer.from_pretrained(params["model_name"])
+    def __init__(self, cfg):
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.tokenizer)
+        self.dataset = cfg.data.dataset
+        self.batch_size = cfg.data.batch_size
+        self.train_size = cfg.data.train_size
+        self.val_size = cfg.data.val_size
+        self.test_size = cfg.data.test_size
+        self.max_length = cfg.data.max_length
 
     def load_data(self):
-        dataset = datasets.load_dataset("glue", "cola")
-        self.train_data = dataset["train"].select(range(128))
-        self.val_data = dataset["validation"].select(range(32))
-        self.test_data = dataset["test"].select(range(16))
+        dataset = datasets.load_dataset("glue", self.dataset)
+        self.train_data = dataset["train"].select(range(self.train_size))
+        self.val_data = dataset["validation"].select(range(self.val_size))
+        self.test_data = dataset["test"].select(range(self.test_size))
         
     def tokenize_data(self, example):
         return self.tokenizer(
             example["sentence"],
             truncation=True,
             padding="max_length",
-            max_length=512,
+            max_length=self.max_length,
         )
 
     def prepare_logging_data(self):

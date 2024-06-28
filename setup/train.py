@@ -1,21 +1,28 @@
 import torch
-from sklearn.metrics import accuracy_score
 from tqdm import tqdm
 import mlflow
+from hydra.utils import instantiate
+from omegaconf import OmegaConf
 
 from tracking import logging
 
 class Trainer():
-    def __init__(self, model, params, train_dataloader, val_dataloader, train_dataset, val_dataset):
+    def __init__(self, cfg, model, train_dataloader, val_dataloader, train_dataset, val_dataset):
         self.model = model
-        self.params = params
-        self.num_epochs = self.params["num_epochs"]  
+        self.params_to_log = dict(cfg)
+        self.num_epochs = cfg.training.num_epochs 
+
+        optimizer_config = OmegaConf.to_container(cfg.training.optimizer, resolve=True)
+        optimizer_config['params'] = self.model.parameters()
+        self.optimizer = instantiate(optimizer_config)
+        self.loss_fn = instantiate(cfg.training.loss)
+        self.metric = instantiate(cfg.training.metric.accuracy)
+
         self.train_dataloader = train_dataloader
         self.val_dataloader = val_dataloader
         self.train_dataset = train_dataset
         self.val_dataset = val_dataset
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.params["lr"])
-        self.loss_fn = torch.nn.CrossEntropyLoss()
+       
         self.best_val_loss = float("inf")
 
     def train_model(self):
@@ -23,7 +30,7 @@ class Trainer():
             mlflow.end_run()
 
         with mlflow.start_run():
-            logging.log_experiment(self.params, self.train_dataset, self.val_dataset)
+            logging.log_experiment(self.params_to_log, self.train_dataset, self.val_dataset)
             return self.run_training_loop(self.train_dataloader, self.val_dataloader)
 
     def run_training_loop(self, train_dataloader, val_dataloader):
@@ -48,13 +55,12 @@ class Trainer():
                 self.optimizer.step()
 
             train_loss = train_loss / len(train_dataloader)
-            train_acc = accuracy_score(all_labels, all_preds)
+            train_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
             val_loss, val_acc = self.evaluate_model(val_dataloader)
 
             logging.log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch)
             
             if val_loss < self.best_val_loss:
-                print(epoch)
                 self.best_val_loss = val_loss
                 model_info = logging.log_model(self.model)
 
@@ -79,7 +85,7 @@ class Trainer():
                 all_labels.extend(batch["label"].cpu().numpy())
 
         avg_val_loss = val_loss / len(val_dataloader)
-        val_acc = accuracy_score(all_labels, all_preds)
+        val_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
         return avg_val_loss, val_acc
     
     
