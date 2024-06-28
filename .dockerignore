@@ -1,0 +1,6 @@
+mlartifacts/
+mlruns/
+.history/
+venv/
+__pycache__/
+outputs/

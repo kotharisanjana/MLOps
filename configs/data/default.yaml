@@ -1,0 +1,7 @@
+dataset: cola
+batch_size: 4
+max_length: 512
+
+train_size: 128
+val_size: 32
+test_size: 16

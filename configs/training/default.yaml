@@ -1,0 +1,13 @@
+num_epochs: 1
+
+loss:
+  _target_: torch.nn.CrossEntropyLoss
+
+optimizer:
+  _target_: torch.optim.Adam
+  lr: 1e-3
+
+metric:
+  accuracy:
+    _target_: torchmetrics.classification.Accuracy
+    task: binary

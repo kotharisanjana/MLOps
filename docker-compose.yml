@@ -1,0 +1,6 @@
+version: "3"
+services:
+  mlflow_exp_app:
+    build: .
+    # ports:
+    #   - "5000:5000"
