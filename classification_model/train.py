@@ -56,17 +56,18 @@ class Trainer():
 
             train_loss = train_loss / len(train_dataloader)
             train_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
-            val_loss, val_acc = self.evaluate_model(val_dataloader)
+            val_loss, val_acc = self.validate_model(val_dataloader)
 
             logging.log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch)
             
             if val_loss < self.best_val_loss:
                 self.best_val_loss = val_loss
                 model_info = logging.log_model(self.model)
+                logging.save_model(self.model)
 
         return model_info.model_uri
 
-    def evaluate_model(self, val_dataloader):
+    def validate_model(self, val_dataloader):
         val_loss = 0
         all_preds = []
         all_labels = []

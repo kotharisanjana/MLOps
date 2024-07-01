@@ -2,10 +2,10 @@ import mlflow
 import hydra
 from omegaconf import DictConfig
 
-from setup.data import Data
-from setup.model import Model
-from setup.train import Trainer
-from setup.inference import Predictor
+from classification_model.data import Data
+from classification_model.model import Model
+from classification_model.train import Trainer
+from classification_model.inference import Predictor
 # from onnx.conversion import convert_to_onnx
 # from onnx.inference import OnnxPredictor
 
