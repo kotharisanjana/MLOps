@@ -1,4 +1,5 @@
 import mlflow
+import torch
 
 def log_experiment(params, train_dataset, val_dataset):
     mlflow.log_params(params)
@@ -19,3 +20,6 @@ def log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch):
 def log_model(model):
     model_info = mlflow.pytorch.log_model(model, "classification_model")
     return model_info
+
+def save_model(model):
+    torch.save(model.state_dict(), "/home/sanjana/Desktop/MLOps/models/model.pth")
