@@ -20,11 +20,9 @@ jobs:
     - name: Build docker image
       run: |
         docker build -t mlops-pipeline -f ../pipeline/Dockerfile .
-    - name: Push2ECR
-      id: ecr
-      uses: jwalton/gh-ecr-push@v1
-      with:
-        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        region: us-east-1
-        image: mlops-pipeline:latest
+    - name: Tag docker image
+      run: |
+        docker tag mlops-pipeline:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops-project:latest
+    - name: Push docker image to ECR
+      run: |
+        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops-project:latest
