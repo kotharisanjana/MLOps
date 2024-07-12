@@ -22,7 +22,7 @@ jobs:
         docker build -t mlops-pipeline -f ../pipeline/Dockerfile .
     - name: Tag docker image
       run: |
-        docker tag mlops-pipeline:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops-project:latest
+        docker tag mlops-pipeline:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
     - name: Push docker image to ECR
       run: |
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops-project:latest
+        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
