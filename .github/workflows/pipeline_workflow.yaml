@@ -19,7 +19,7 @@ jobs:
         aws-region: us-east-1
     - name: Build docker image
       run: |
-        docker build -t mlops-pipeline .
+        docker build -t mlops-pipeline -f pipeline/Dockerfile .
     - name: Push2ECR
       id: ecr
       uses: jwalton/gh-ecr-push@v1
