@@ -1,3 +1,4 @@
 dvc_repo: ../../../MLOps
-model_dvc_file: ../../../MLOps/models/model.pth
+model_dvc_file: ../../../MLOps/models/model.pth.dvc
 local_model_path: /home/sanjana/Desktop/MLOps/models/model.pth
+s3_bucket: mlopsbucket1
