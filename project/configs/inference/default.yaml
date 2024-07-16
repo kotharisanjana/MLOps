@@ -1,0 +1,3 @@
+dvc_repo: ../../../MLOps
+model_dvc_file: ../../../MLOps/models/model.pth
+local_model_path: /home/sanjana/Desktop/MLOps/models/model.pth
