@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./pipeline
+        working-directory: ./project
     steps:
     - name: Checkout
       uses: actions/checkout@v2
