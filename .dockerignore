@@ -4,3 +4,7 @@ mlruns/
 venv/
 __pycache__/
 outputs/
+.git/
+.github/
+.idea/
+.vscode/

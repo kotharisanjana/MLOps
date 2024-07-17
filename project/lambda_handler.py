@@ -1,5 +1,6 @@
 import json
 from hydra import compose, initialize
+import time
 
 from prediction_service.inference import Inference
 
@@ -13,12 +14,19 @@ def lambda_handler(event, context):
 		body = event["body"]
 		body = json.loads(body)
 		inference_sample = body["sentence"]
-
-		response = inferencing_instance.predict(inference_sample)
-		return {
-			"statusCode": 200,
-			"headers": {},
-			"body": json.dumps(response)
-		}
 	else:
-		return inferencing_instance.predict(event["sentence"])
+		inference_sample = event["sentence"]
+
+	response = inferencing_instance.predict(inference_sample)
+	return {
+		"statusCode": 200,
+		"headers": {},
+		"body": json.dumps(response.cpu().numpy().tolist())
+	}
+	
+# if __name__ == "__main__":
+# 	event = {
+# 		"sentence": "This is a test sentence."
+# 	}
+# 	resp = lambda_handler(event, None)
+# 	print(resp)
