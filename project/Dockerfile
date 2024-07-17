@@ -2,7 +2,7 @@ FROM public.ecr.aws/lambda/python:3.8
 
 COPY requirements_inference.txt requirements_inference.txt
 
-RUN pip install -r requirements_inference.txt --no-cache-dir --no-deps
+RUN pip install -r requirements_inference.txt --no-cache-dir
 
 COPY . .
 
