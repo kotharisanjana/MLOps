@@ -32,7 +32,3 @@ jobs:
     - name: Deploy docker image to lambda
       run: |
         aws lambda update-function-code --function-name prediction_service --image-uri ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
-    - name: Verify lambda function deployment
-      run: |
-        aws lambda get-function --function-name prediction_service
-
