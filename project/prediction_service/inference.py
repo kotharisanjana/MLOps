@@ -10,10 +10,13 @@ class Inference:
         self.dvc_repo = cfg.inference.dvc_repo
         self.model_dvc_file = cfg.inference.model_dvc_file
         self.local_model_path = cfg.inference.local_model_path
-        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.tokenizer)
-        self.model = Model(cfg)
         self.max_length = cfg.data.max_length
         self.s3_bucket = cfg.inference.s3_bucket
+        self.initialize_model(cfg)
+
+    def initialize_model(self, cfg):
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.tokenizer)
+        self.model = Model(cfg)
 
     def get_model_md5(self):
         with open(self.model_dvc_file, 'r') as f:
