@@ -1,4 +1,4 @@
 [core]
-    remote = storage
-['remote "storage"']
-    url = s3://mlopsprojectv1
+    remote = model-store
+['remote "model-store"']
+    url = s3://mlopsbucket1
