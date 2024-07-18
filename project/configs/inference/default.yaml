@@ -1,2 +1,2 @@
-model_dvc_file: ./models/model.pth.dvc
+model_dvc_file: models/model.pth.dvc
 local_model_path: ./tmp/model.pth

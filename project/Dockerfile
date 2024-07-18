@@ -5,21 +5,23 @@ RUN mkdir $TEMP_DIR
 
 ENV TRANSFORMERS_CACHE=$TEMP_DIR \
     TRANSFORMERS_VERBOSITY=error \
-    PYTHONPATH="/var/task:${PYTHONPATH}"
+    PYTHONPATH="${PYTHONPATH}"
 
-COPY requirements_inference.txt requirements_inference.txt
-RUN pip install -r requirements_inference.txt --no-cache-dir
+RUN yum install -y sqlite
 
-COPY . .
+# COPY requirements_inference.txt requirements_inference.txt
+# RUN pip install -r requirements_inference.txt --no-cache-dir --no-deps
 
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
+# COPY . .
+
+# ENV LC_ALL=C.UTF-8
+# ENV LANG=C.UTF-8
 
 RUN pip install "dvc[s3]"
 RUN dvc init --no-scm
 RUN dvc remote add -d model-store s3://mlopsbucket1
 
-RUN dvc pull ./models/model.pth.dvc
+RUN dvc pull models/model.pth.dvc
 
 RUN chmod -R 0755 $TEMP_DIR
 
