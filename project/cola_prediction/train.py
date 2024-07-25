@@ -62,10 +62,10 @@ class Trainer():
             
             if val_loss < self.best_val_loss:
                 self.best_val_loss = val_loss
-                model_info = logging.log_model(self.model)
-                logging.save_model(self.model)
+                # model_info = logging.log_model(self.model)
+                logging.save_model_to_local(self.model)
 
-        return model_info.model_uri
+        # return model_info.model_uri
 
     def validate_model(self, val_dataloader):
         val_loss = 0

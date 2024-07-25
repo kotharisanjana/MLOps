@@ -21,5 +21,5 @@ def log_model(model):
     model_info = mlflow.pytorch.log_model(model, "classification_model")
     return model_info
 
-def save_model(model):
+def save_model_to_local(model):
     torch.save(model.state_dict(), "/home/sanjana/Desktop/MLOps/models/model.pth")
