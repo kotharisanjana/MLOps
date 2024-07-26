@@ -131,3 +131,6 @@ mlartifacts/
 
 # hydra
 outputs/
+
+# models
+project/models/

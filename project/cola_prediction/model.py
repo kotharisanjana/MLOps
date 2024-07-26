@@ -5,7 +5,7 @@ from transformers import AutoModel
 class Model(nn.Module):
     def __init__(self, cfg):
         super(Model, self).__init__()
-        self.model = AutoModel.from_pretrained(cfg.model.model)
+        self.model = AutoModel.from_pretrained(cfg.model.pretrained.model)
         self.W = nn.Linear(self.model.config.hidden_size, cfg.model.num_classes)
 
     def forward(self, input_ids, attention_mask):

@@ -23,17 +23,17 @@ class Trainer():
         self.train_dataset = train_dataset
         self.val_dataset = val_dataset
        
-        self.best_val_loss = float("inf")
-
     def train_model(self):
         if mlflow.active_run() is not None:
             mlflow.end_run()
 
         with mlflow.start_run():
             logging.log_experiment(self.params_to_log, self.train_dataset, self.val_dataset)
-            return self.run_training_loop(self.train_dataloader, self.val_dataloader)
+            return self.training_loop(self.train_dataloader, self.val_dataloader)
 
-    def run_training_loop(self, train_dataloader, val_dataloader):
+    def training_loop(self, train_dataloader, val_dataloader):
+        best_val_loss = float("inf")
+
         for epoch in tqdm(range(self.num_epochs)):
             all_preds, all_labels = [], []
             train_loss = 0
@@ -56,12 +56,12 @@ class Trainer():
 
             train_loss = train_loss / len(train_dataloader)
             train_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
+            
             val_loss, val_acc = self.validate_model(val_dataloader)
 
             logging.log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch)
-            
-            if val_loss < self.best_val_loss:
-                self.best_val_loss = val_loss
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
                 model_info = logging.log_model(self.model)
 
         return model_info.model_uri
@@ -86,6 +86,7 @@ class Trainer():
 
         avg_val_loss = val_loss / len(val_dataloader)
         val_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
+
         return avg_val_loss, val_acc
     
     

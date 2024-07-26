@@ -8,12 +8,15 @@ import mlflow
 
 class Data(torch.utils.data.Dataset):
     def __init__(self, cfg):
-        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.tokenizer)
         self.dataset = cfg.data.dataset
-        self.batch_size = cfg.data.batch_size
-        self.train_size = cfg.data.train_size
-        self.val_size = cfg.data.val_size
-        self.max_length = cfg.data.max_length
+        self.batch_size = cfg.data.configuration.batch_size
+        self.max_length = cfg.data.configuration.max_length
+        self.train_size = cfg.data.size.train_size
+        self.val_size = cfg.data.size.val_size
+        self.load_tokenizer(cfg)
+
+    def load_tokenizer(self, cfg):
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.pretrained.tokenizer)
 
     def load_data(self):
         dataset = datasets.load_dataset("glue", self.dataset)

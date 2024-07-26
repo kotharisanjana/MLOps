@@ -22,7 +22,7 @@ jobs:
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
     - name: Build docker image
       run: |
-        docker build -t mlops-pipeline -f ../project/Dockerfile .
+        docker build -t mlops-pipeline -f ../Dockerfile .
     - name: Tag docker image
       run: |
         docker tag mlops-pipeline:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest

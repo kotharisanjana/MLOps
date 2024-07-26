@@ -1,13 +1,13 @@
+import os 
 import mlflow
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 
 from cola_prediction.data import Data
 from cola_prediction.model import Model
 from cola_prediction.train import Trainer
 
-mlflow_tracking_uri = "http://localhost:5000"
-mlflow.set_tracking_uri(mlflow_tracking_uri)
+mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("mlflow_experiment")
 
 @hydra.main(config_path="configs", config_name="config")
@@ -22,7 +22,12 @@ def main(cfg: DictConfig):
 
     trainer = Trainer(cfg, model, train_dataloader, val_dataloader, train_dataset, val_dataset)
     model_uri = trainer.train_model()
-    print(model_uri)
+    
+    config_path = os.path.join(hydra.utils.get_original_cwd(), "configs/model/default.yaml")
+    custom_cfg = OmegaConf.load(config_path)
+    custom_cfg.trained = DictConfig({"model_uri": model_uri})
+    OmegaConf.save(custom_cfg, config_path)
+
 
 if __name__ == "__main__":
     main()

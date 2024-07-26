@@ -1,4 +1,4 @@
 defaults:
-  - model: default
-  - data: default
-  - training: default
+- model: default
+- data: default
+- training: default

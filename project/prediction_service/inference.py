@@ -1,19 +1,20 @@
 import torch
-import mlflow
-
+import os 
 from cola_prediction.model import Model
 from cola_prediction.data import Data  
 
-mlflow.set_tracking_uri("http://localhost:5000")
 
 class Inference:
-    def __init__(self, cfg, model_uri):
+    def __init__(self, cfg):
         self.tokenizer = Data(cfg)
-        self.model = mlflow.pytorch.load_model(model_uri)
+        self.model = Model(cfg)
+        state_dict = torch.load(os.path.join(os.getcwd(), "models/model.pth"))
+        self.model.load_state_dict(state_dict)
         self.model.eval()
 
     def predict(self, inference_sample):
         tokenized_sample = self.tokenizer.tokenize_data(inference_sample)
+        
         input_ids = torch.tensor(tokenized_sample["input_ids"])
         attention_mask = torch.tensor(tokenized_sample["attention_mask"])
 
