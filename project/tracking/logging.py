@@ -20,6 +20,3 @@ def log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch):
 def log_model(model):
     model_info = mlflow.pytorch.log_model(model, "classification_model")
     return model_info
-
-def save_model_to_local(model):
-    torch.save(model.state_dict(), "/home/sanjana/Desktop/MLOps/models/model.pth")

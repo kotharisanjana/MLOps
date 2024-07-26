@@ -21,8 +21,8 @@ def main(cfg: DictConfig):
     model = Model(cfg)
 
     trainer = Trainer(cfg, model, train_dataloader, val_dataloader, train_dataset, val_dataset)
-    trainer.train_model()
-    
+    model_uri = trainer.train_model()
+    print(model_uri)
 
 if __name__ == "__main__":
     main()

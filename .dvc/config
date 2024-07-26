@@ -1,4 +1,0 @@
-[core]
-    remote = model-store
-['remote "model-store"']
-    url = s3://mlopsbucket1
