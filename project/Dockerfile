@@ -4,11 +4,11 @@ WORKDIR /project
 
 COPY requirements.txt requirements.txt
 
-RUN pip install -r requirements.txt --no-cache-dir
+RUN pip install --no-cache-dir torch==2.3.1 -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+RUN rm -rf /root/.cache
 
 COPY . .
-
-RUN ls -R
 
 RUN python download_model.py
 
