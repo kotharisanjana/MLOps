@@ -3,9 +3,18 @@ on: [push]
 jobs:
   mlops-container:
     runs-on: ubuntu-latest
+
+    services:
+      mlflow:
+        image: mlflow/mlflow:latest
+        ports:
+          - 5000:5000
+        options: --name mlflow
+
     defaults:
       run:
         working-directory: ./project
+        
     steps:
     - name: Checkout
       uses: actions/checkout@v2
