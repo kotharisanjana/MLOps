@@ -6,15 +6,14 @@ jobs:
 
     services:
       mlflow:
-        image: mlflow/mlflow:latest
+        image: ubuntu/mlflow:2.1.1_1.0-22.04_stable
         ports:
           - 5000:5000
-        options: --name mlflow
 
     defaults:
       run:
         working-directory: ./project
-        
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
