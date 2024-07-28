@@ -12,6 +12,6 @@ COPY . .
 
 RUN python download_model.py
 
-# CMD ["lambda_handler.lambda_handler"]
+CMD ["lambda_handler.lambda_handler"]
 
-RUN python lambda_handler.py
+# RUN python lambda_handler.py
