@@ -9,12 +9,17 @@ jobs:
         image: ghcr.io/mlflow/mlflow
         ports:
           - 5000:5000
+        options: --name mlflow
 
     defaults:
       run:
         working-directory: ./project
 
     steps:
+      name: Test MLflow connectivity
+      run: |
+        curl http://localhost:5000/api/2.0/mlflow/experiments/list
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
