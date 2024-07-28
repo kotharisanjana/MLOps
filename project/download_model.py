@@ -6,7 +6,7 @@ from omegaconf import OmegaConf
 # bridge network IP so that docker container can access the host machine
 # mlflow.set_tracking_uri("http://172.17.0.1:5000")
 
-# when using github actions - use service name
+# when using github actions, use service name
 mlflow.set_tracking_uri("http://mlflow:5000")
 
 def load_model_uri_from_config():
