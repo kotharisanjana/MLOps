@@ -1,5 +1,5 @@
 name: MLOps Pipeline Automation
-on: []
+on: [push]
 jobs:
   mlops-pipeline:
     runs-on: ubuntu-latest
