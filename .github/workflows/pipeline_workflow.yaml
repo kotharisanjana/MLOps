@@ -1,7 +1,7 @@
 name: MLOps Pipeline Automation
 on: [push]
 jobs:
-  mlops-container:
+  mlops-pipeline:
     runs-on: ubuntu-latest
 
     services:
