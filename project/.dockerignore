@@ -19,6 +19,7 @@ outputs/
 project/outputs/
 mlartifacts/
 mlruns/
+multirun/
 
 # Ignore history files
 .history/

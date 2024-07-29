@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 import datasets
 from transformers import AutoTokenizer
-import mlflow
+import pandas as pd
 
 # https://huggingface.co/datasets/nyu-mll/glue/viewer/cola
 
@@ -31,12 +31,7 @@ class Data(torch.utils.data.Dataset):
             max_length=self.max_length,
         )
 
-    def prepare_logging_data(self):
-        train_dataset = mlflow.data.huggingface_dataset.from_huggingface(self.train_data, "train_data")
-        val_dataset = mlflow.data.huggingface_dataset.from_huggingface(self.val_data, "val_data")
-        return train_dataset, val_dataset
-
-    def prepare_modeling_data(self):
+    def prepare_data(self):
         self.train_data = self.train_data.map(self.tokenize_data, batched=True)
         self.train_data.set_format(
             type="torch", columns=["input_ids", "attention_mask", "label"]
@@ -57,3 +52,10 @@ class Data(torch.utils.data.Dataset):
         )
 
         return train_dataloader, val_dataloader
+    
+    def convert_to_csv(self):
+        train_data_pandas = pd.DataFrame(self.train_data)
+        train_data_pandas.to_csv("train_data.csv", index=False)
+
+        val_data_pandas = pd.DataFrame(self.val_data)
+        val_data_pandas.to_csv("val_data.csv", index=False)

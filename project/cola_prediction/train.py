@@ -7,7 +7,7 @@ from omegaconf import OmegaConf
 from tracking import logging
 
 class Trainer():
-    def __init__(self, cfg, model, train_dataloader, val_dataloader, train_dataset, val_dataset):
+    def __init__(self, cfg, model, train_dataloader, val_dataloader):
         self.model = model
         self.params_to_log = dict(cfg)
         self.num_epochs = cfg.training.num_epochs 
@@ -20,15 +20,15 @@ class Trainer():
 
         self.train_dataloader = train_dataloader
         self.val_dataloader = val_dataloader
-        self.train_dataset = train_dataset
-        self.val_dataset = val_dataset
        
     def train_model(self):
         if mlflow.active_run() is not None:
             mlflow.end_run()
 
         with mlflow.start_run():
-            logging.log_experiment(self.params_to_log, self.train_dataset, self.val_dataset)
+            logging.log_parameters(self.params_to_log) 
+            # logging.log_dataset(self.train_dataloader, self.val_dataloader)
+            logging.log_dataset()
             return self.training_loop(self.train_dataloader, self.val_dataloader)
 
     def training_loop(self, train_dataloader, val_dataloader):

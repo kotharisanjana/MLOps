@@ -14,13 +14,13 @@ mlflow.set_experiment("mlflow_experiment")
 def main(cfg: DictConfig):
     data = Data(cfg)
     data.load_data()
-    train_dataset, val_dataset = data.prepare_logging_data()
-    data.prepare_modeling_data()
+    data.prepare_data()
     train_dataloader, val_dataloader = data.setup_dataloaders()
+    data.convert_to_csv()
 
     model = Model(cfg)
 
-    trainer = Trainer(cfg, model, train_dataloader, val_dataloader, train_dataset, val_dataset)
+    trainer = Trainer(cfg, model, train_dataloader, val_dataloader)
     model_uri = trainer.train_model()
     
     config_path = os.path.join(hydra.utils.get_original_cwd(), "configs/model/default.yaml")
