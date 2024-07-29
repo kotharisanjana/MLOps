@@ -31,7 +31,7 @@ jobs:
     - name: Wait for MLflow server to be ready
       run: |
         for i in {1..10}; do
-          if curl -s http://localhost:5000/health; then
+          if curl -s http://mlflow:5000/; then
             echo "MLflow server is up!"
             break
           fi
@@ -41,7 +41,7 @@ jobs:
 
     - name: Set MLflow tracking URI
       run: |
-        echo "MLFLOW_TRACKING_URI=http://localhost:5000" >> $GITHUB_ENV
+        echo "MLFLOW_TRACKING_URI=http://mlflow:5000" >> $GITHUB_ENV
 
     - name: Log in to Amazon ECR
       run: |
