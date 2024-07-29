@@ -20,24 +20,45 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
+
+    - name: Wait for MLflow server to be ready
+      run: |
+        for i in {1..10}; do
+          if curl -s http://localhost:5000/health; then
+            echo "MLflow server is up!"
+            break
+          fi
+          echo "Waiting for MLflow server to start..."
+          sleep 5
+        done
+
+    - name: Set MLflow tracking URI
+      run: |
+        echo "MLFLOW_TRACKING_URI=http://localhost:5000" >> $GITHUB_ENV
+
     - name: Log in to Amazon ECR
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+    
     - name: Build docker image
       run: |
         docker build -t mlops-pipeline -f ../project/Dockerfile .
+    
     - name: Tag docker image
       run: |
         docker tag mlops-pipeline:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
+    
     - name: Push docker image to ECR
       run: |
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
+    
     - name: Deploy docker image to lambda
       run: |
         aws lambda update-function-code --function-name prediction_service --image-uri ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
