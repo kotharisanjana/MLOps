@@ -21,13 +21,9 @@ class Trainer():
         self.train_dataloader = train_dataloader
         self.val_dataloader = val_dataloader
        
-    def train_model(self):
-        if mlflow.active_run() is not None:
-            mlflow.end_run()
-
-        with mlflow.start_run():
+    def train_model(self, exp_id):
+        with mlflow.start_run(experiment_id=exp_id):
             logging.log_parameters(self.params_to_log) 
-            # logging.log_dataset(self.train_dataloader, self.val_dataloader)
             logging.log_dataset()
             return self.training_loop(self.train_dataloader, self.val_dataloader)
 

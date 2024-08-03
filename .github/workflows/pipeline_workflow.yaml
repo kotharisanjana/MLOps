@@ -4,13 +4,6 @@ jobs:
   mlops-pipeline:
     runs-on: ubuntu-latest
 
-    services:
-      mlflow:
-        image: ghcr.io/mlflow/mlflow
-        ports:
-          - 5000:5000
-        options: --name mlflow
-
     defaults:
       run:
         working-directory: ./project
@@ -27,21 +20,6 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-
-    - name: Wait for MLflow server to be ready
-      run: |
-        for i in {1..10}; do
-          if curl -s http://mlflow:5000/; then
-            echo "MLflow server is up!"
-            break
-          fi
-          echo "Waiting for MLflow server to start..."
-          sleep 5
-        done
-
-    - name: Set MLflow tracking URI
-      run: |
-        echo "MLFLOW_TRACKING_URI=http://mlflow:5000" >> $GITHUB_ENV
 
     - name: Log in to Amazon ECR
       run: |

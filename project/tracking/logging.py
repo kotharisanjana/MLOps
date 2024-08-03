@@ -12,7 +12,7 @@ def log_parameters(params):
     mlflow.log_param("learning_rate", params["training"]["optimizer"]["lr"])
 
 def log_dataset():
-    mlflow.log_artifact("train_data.csv", 'data_folder')
+    mlflow.log_artifact("train_data.csv", "data_folder")
     mlflow.log_artifact("val_data.csv", "data_folder")
 
 def log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch):
