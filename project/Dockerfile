@@ -10,6 +10,8 @@ RUN rm -rf /root/.cache
 
 COPY . .
 
+RUN mkdir models
+
 RUN python download_model.py
 
 # After deployment to lambda function
