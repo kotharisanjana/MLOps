@@ -1,5 +1,4 @@
 defaults:
-  - model: default
-  - data: default
-  - training: default
-  - inference: default
+- model: default
+- data: default
+- training: default

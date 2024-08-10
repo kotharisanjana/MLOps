@@ -16,16 +16,17 @@ def lambda_handler(event, context):
 	else:
 		inference_sample = event["sentence"]
 
-	response = inferencing_instance.predict(inference_sample)
+	input = {"sentence": inference_sample}
+	response = inferencing_instance.predict(input)
 	return {
 		"statusCode": 200,
 		"headers": {},
 		"body": json.dumps(response.cpu().numpy().tolist())
 	}
-	
-# if __name__ == "__main__":
-# 	event = {
-# 		"sentence": "This is a test sentence."
-# 	}
-# 	resp = lambda_handler(event, None)
-# 	print(resp)
+
+if __name__ == "__main__":
+	event = {
+		"sentence": "This is a test sentence."
+	}
+	resp = lambda_handler(event, None)
+	print(resp)

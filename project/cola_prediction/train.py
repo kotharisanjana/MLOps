@@ -7,7 +7,7 @@ from omegaconf import OmegaConf
 from tracking import logging
 
 class Trainer():
-    def __init__(self, cfg, model, train_dataloader, val_dataloader, train_dataset, val_dataset):
+    def __init__(self, cfg, model, train_dataloader, val_dataloader):
         self.model = model
         self.params_to_log = dict(cfg)
         self.num_epochs = cfg.training.num_epochs 
@@ -20,20 +20,16 @@ class Trainer():
 
         self.train_dataloader = train_dataloader
         self.val_dataloader = val_dataloader
-        self.train_dataset = train_dataset
-        self.val_dataset = val_dataset
        
-        self.best_val_loss = float("inf")
+    def train_model(self, exp_id):
+        with mlflow.start_run(experiment_id=exp_id):
+            logging.log_parameters(self.params_to_log) 
+            logging.log_dataset()
+            return self.training_loop(self.train_dataloader, self.val_dataloader)
 
-    def train_model(self):
-        if mlflow.active_run() is not None:
-            mlflow.end_run()
+    def training_loop(self, train_dataloader, val_dataloader):
+        best_val_loss = float("inf")
 
-        with mlflow.start_run():
-            logging.log_experiment(self.params_to_log, self.train_dataset, self.val_dataset)
-            return self.run_training_loop(self.train_dataloader, self.val_dataloader)
-
-    def run_training_loop(self, train_dataloader, val_dataloader):
         for epoch in tqdm(range(self.num_epochs)):
             all_preds, all_labels = [], []
             train_loss = 0
@@ -56,16 +52,15 @@ class Trainer():
 
             train_loss = train_loss / len(train_dataloader)
             train_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
+            
             val_loss, val_acc = self.validate_model(val_dataloader)
 
             logging.log_training_metrics(train_loss, train_acc, val_loss, val_acc, epoch)
-            
-            if val_loss < self.best_val_loss:
-                self.best_val_loss = val_loss
-                # model_info = logging.log_model(self.model)
-                logging.save_model_to_local(self.model)
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                model_info = logging.log_model(self.model)
 
-        # return model_info.model_uri
+        return model_info.model_uri
 
     def validate_model(self, val_dataloader):
         val_loss = 0
@@ -87,6 +82,7 @@ class Trainer():
 
         avg_val_loss = val_loss / len(val_dataloader)
         val_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
+
         return avg_val_loss, val_acc
     
     
