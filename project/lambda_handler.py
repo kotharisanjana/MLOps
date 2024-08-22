@@ -3,7 +3,7 @@ from hydra import compose, initialize
 
 from prediction_service.inference import Inference
 
-def lambda_handler(event, context):
+def handler(event, context):
 	with initialize(config_path="configs"):
 		cfg = compose(config_name="config")
 
@@ -24,9 +24,9 @@ def lambda_handler(event, context):
 		"body": json.dumps(response.cpu().numpy().tolist())
 	}
 
-if __name__ == "__main__":
-	event = {
-		"sentence": "This is a test sentence."
-	}
-	resp = lambda_handler(event, None)
-	print(resp)
+# if __name__ == "__main__":
+# 	event = {
+# 		"sentence": "This is a test sentence."
+# 	}
+# 	resp = handler(event, None)
+# 	print(resp)
