@@ -3,7 +3,7 @@ from hydra import compose, initialize
 
 from prediction_service.inference import Inference
 
-def handler(event, context):
+def lambda_handler(event, context):
 	with initialize(config_path="configs"):
 		cfg = compose(config_name="config")
 

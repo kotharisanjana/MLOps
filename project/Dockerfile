@@ -20,7 +20,7 @@ RUN mkdir models
 RUN python download_model.py
 
 # After deployment to lambda function
-CMD ["lambda_handler.handler"]
+CMD ["lambda_function.lambda_handler"]
 
 # For testing on local
 # RUN python lambda_handler.py
