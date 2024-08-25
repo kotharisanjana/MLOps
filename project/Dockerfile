@@ -4,7 +4,9 @@ WORKDIR ${LAMBDA_TASK_ROOT}
 
 COPY . ${LAMBDA_TASK_ROOT}
 
-RUN pip install --no-cache-dir torch==2.3.1 -r requirements_inference.txt --extra-index-url https://download.pytorch.org/whl/cpu
+# RUN pip install --no-cache-dir torch==2.3.1 -r requirements_inference.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+RUN pip install --no-cache-dir -r requirements_inference.txt
 
 ARG CACHE_DIR=/tmp/transformers_cache
 ARG MODEl_DIR=models
@@ -17,8 +19,4 @@ ENV TRANSFORMERS_CACHE=${MODEL_DIR} \
 
 RUN python load_model.py
 
-# After deployment to lambda function
 CMD ["lambda_function.lambda_handler"]
-
-# For testing on local
-# RUN python lambda_function.py

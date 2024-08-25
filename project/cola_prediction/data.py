@@ -4,8 +4,6 @@ import datasets
 from transformers import AutoTokenizer
 import pandas as pd
 
-# https://huggingface.co/datasets/nyu-mll/glue/viewer/cola
-
 class Data(torch.utils.data.Dataset):
     def __init__(self, cfg):
         self.dataset = cfg.data.dataset
