@@ -9,8 +9,8 @@ RUN pip install --no-cache-dir torch==2.3.1 -r requirements_inference.txt --extr
 ARG CACHE_DIR=/tmp/transformers_cache
 ARG MODEl_DIR=models
 
-RUN mkdir $MODEL_DIR
-RUN mkdir ${MODEl_DIR}
+RUN mkdir $CACHE_DIR
+RUN mkdir $MODEl_DIR
 
 ENV TRANSFORMERS_CACHE=${MODEL_DIR} \
     TRANSFORMERS_VERBOSITY=error
