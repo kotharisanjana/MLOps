@@ -19,6 +19,6 @@ def download_model(model_uri):
     # torch.save(model.state_dict(), os.path.join(os.getcwd(),  "models/model.pth"))
     torch.save(model.state_dict(), os.path.join("/tmp/transformers_cache", "model.pth"))
 
-if __name__ == "__main__":
-    model_uri = load_model_uri_from_config()
-    download_model(model_uri)
+# if __name__ == "__main__":
+#     model_uri = load_model_uri_from_config()
+#     download_model(model_uri)
