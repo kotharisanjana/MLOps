@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir torch==2.3.1 -r requirements_inference.txt --extr
 
 RUN rm -rf /root/.cache
 
-ARG MODEL_DIR = models
+ARG MODEL_DIR=models
 RUN mkdir $MODEL_DIR
 
 ENV TRANSFORMERS_CACHE=$MODEL_DIR \
