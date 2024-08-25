@@ -8,7 +8,8 @@ class Inference:
     def __init__(self, cfg):
         self.tokenizer = Data(cfg)
         self.model = Model(cfg)
-        state_dict = torch.load(os.path.join("/tmp/transformers_cache", "model.pth"))
+        # state_dict = torch.load(os.path.join("/tmp/transformers_cache", "model.pth"))
+        state_dict = torch.load(os.path.join(os.getcwd(), "models/model.pth"))
         self.model.load_state_dict(state_dict)
         self.model.eval()
 

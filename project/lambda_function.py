@@ -5,8 +5,8 @@ from prediction_service.inference import Inference
 from load_model import load_model_uri_from_config, download_model
 
 def lambda_handler(event, context):
-	model_uri = load_model_uri_from_config()
-	download_model(model_uri)
+	# model_uri = load_model_uri_from_config()
+	# download_model(model_uri)
 
 	with initialize(config_path="configs"):
 		cfg = compose(config_name="config")
