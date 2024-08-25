@@ -16,7 +16,7 @@ class Data(torch.utils.data.Dataset):
         self.load_tokenizer(cfg)
 
     def load_tokenizer(self, cfg):
-        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.pretrained.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.pretrained.tokenizer, cache_dir="/tmp/transformers_cache")
 
     def load_data(self):
         dataset = datasets.load_dataset("glue", self.dataset)
