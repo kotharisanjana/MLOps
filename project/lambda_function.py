@@ -2,7 +2,7 @@ import json
 from hydra import compose, initialize
 
 from prediction_service.inference import Inference
-from project.load_model import load_model_uri_from_config, download_model
+from load_model import load_model_uri_from_config, download_model
 
 def lambda_handler(event, context):
 	model_uri = load_model_uri_from_config()
