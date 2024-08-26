@@ -3,7 +3,6 @@ import os
 from cola_prediction.model import Model
 from cola_prediction.data import Data  
 
-
 class Inference:
     def __init__(self, cfg):
         self.tokenizer = Data(cfg)

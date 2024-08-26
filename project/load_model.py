@@ -3,10 +3,6 @@ import torch
 import os
 from omegaconf import OmegaConf
 
-# bridge network IP so that docker container can access the host machine
-# mlflow.set_tracking_uri("http://172.17.0.1:5000")
-# mlflow.set_tracking_uri("http://localhost:5000")
-
 mlflow.set_tracking_uri("https://dagshub.com/sanjanak98/MLOps.mlflow")
 
 def load_model_uri_from_config():

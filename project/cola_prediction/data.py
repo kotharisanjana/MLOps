@@ -4,8 +4,6 @@ import datasets
 from transformers import AutoTokenizer
 import pandas as pd
 
-# https://huggingface.co/datasets/nyu-mll/glue/viewer/cola
-
 class Data(torch.utils.data.Dataset):
     def __init__(self, cfg):
         self.dataset = cfg.data.dataset
@@ -16,7 +14,7 @@ class Data(torch.utils.data.Dataset):
         self.load_tokenizer(cfg)
 
     def load_tokenizer(self, cfg):
-        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.pretrained.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model.pretrained.tokenizer, cache_dir="/tmp/transformers_cache")
 
     def load_data(self):
         dataset = datasets.load_dataset("glue", self.dataset)
