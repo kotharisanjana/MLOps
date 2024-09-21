@@ -6,8 +6,6 @@ COPY . ${LAMBDA_TASK_ROOT}
 
 RUN pip install --no-cache-dir torch==2.3.1 -r requirements_inference.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
-RUN pip install --no-cache-dir -r requirements_inference.txt
-
 ARG CACHE_DIR=/tmp/transformers_cache
 ARG MODEl_DIR=models
 
