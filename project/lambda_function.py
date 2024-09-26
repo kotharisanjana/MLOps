@@ -1,13 +1,19 @@
 import json
-import boto3
 import random
+from prometheus_client import start_http_server, Gauge
 from hydra import compose, initialize
+import threading
 
 from prediction_service.inference import Inference
 
-cloudwatch = boto3.client("cloudwatch", region_name="us-east-1")
+ACCURACY = Gauge('prediction_accuracy', 'Accuracy of the model')
 
-def lambda_handler(event, context):
+def start_server():
+    start_http_server(port=5000, addr='0.0.0.0')
+    while True:
+        pass
+
+def lambda_handler(event):
 	with initialize(config_path="configs"):
 		cfg = compose(config_name="config")
 
@@ -36,45 +42,25 @@ def lambda_handler(event, context):
 
 	input = {"sentence": inference_sample}
 	response = inferencing_instance.predict(input)
-
-	cloudwatch.put_metric_data(
-		MetricData = [
-            {
-                "MetricName": "OnlineDevices",
-                "Dimensions": [
-                    {
-                        "Name": "LastMessages",
-                        "Value": "With-in-one-hour"
-                    },
-                    {
-                        "Name": "APP_VERSION",
-                        "Value": "1.0"
-                    },
-                    ],
-                    "Unit": "Count",
-                    "Value": random.randint(1, 500)
-            },
-            {
-                "MetricName": "TotalDevices",
-                "Dimensions": [
-                    {
-                        "Name": "LastMessages",
-                        "Value": "With-in-one-year"
-                    },
-                    {
-                        "Name": "APP_VERSION",
-                        "Value": "1.0"
-                    },
-                    ],
-                    "Unit": "Count",
-                    "Value": random.randint(1, 500)
-            },
-        ],
-		Namespace = "MLOpsApp"
-	)
+	
+	ACCURACY.set(random.random())
 
 	return {
 		"statusCode": 200,
 		"headers": {},
 		"body": json.dumps(response.cpu().numpy().tolist())
 	}
+
+
+
+if __name__ == "__main__":
+	server_thread = threading.Thread(target=start_server)      
+	server_thread.start()
+
+	event = {
+		"sentence": "life is beautiful when you find happiness in small things"
+	}
+	
+	lambda_handler(event)
+	
+	server_thread.join()
