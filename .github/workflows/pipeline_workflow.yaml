@@ -2,7 +2,7 @@ name: MLOps Pipeline Automation
 on: 
   push:
   repository_dispatch:
-    event-type: model-retrained
+    types: model-retrained
 jobs:
   mlops-pipeline:
     runs-on: ubuntu-latest
