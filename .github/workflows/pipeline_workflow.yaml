@@ -41,4 +41,3 @@ jobs:
         docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
         docker stop $(docker ps -a -q) || true
         docker run -d -p 5001:5001 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
-        EOF
