@@ -1,5 +1,4 @@
 import mlflow
-import pandas as pd
 
 def log_parameters(params):
     mlflow.log_param("model", params["model"]["pretrained"]["model"])

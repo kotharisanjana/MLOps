@@ -28,18 +28,23 @@ jobs:
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
     
-    - name: Build docker image
+    - name: Build and tag docker image
       run: |
-        docker build -t mlops-pipeline -f ../project/Dockerfile .
-    
-    - name: Tag docker image
-      run: |
-        docker tag mlops-pipeline:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
+        docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest -f ../project/Dockerfile .
     
     - name: Push docker image to ECR
       run: |
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
-    
-    - name: Deploy docker image to lambda
+
+    - name: Install SSH Key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy Docker image to EC2
       run: |
-        aws lambda update-function-code --function-name prediction_service --image-uri ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
+        docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
+        docker stop $(docker ps -a -q) || true
+        docker run -d -p 5001:5001 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mlops_project:latest
+        EOF

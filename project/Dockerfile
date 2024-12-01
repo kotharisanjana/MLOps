@@ -1,22 +1,19 @@
-FROM public.ecr.aws/lambda/python:3.8
+FROM python:3.8-slim
 
-WORKDIR ${LAMBDA_TASK_ROOT}
+WORKDIR /app
 
-COPY . ${LAMBDA_TASK_ROOT}
+COPY . /app
 
 RUN pip install --no-cache-dir torch==2.3.1 -r requirements_inference.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
-RUN pip install --no-cache-dir -r requirements_inference.txt
-
 ARG CACHE_DIR=/tmp/transformers_cache
-ARG MODEl_DIR=models
+ARG MODEL_DIR=models
 
-RUN mkdir $CACHE_DIR
-RUN mkdir $MODEl_DIR
+RUN mkdir $CACHE_DIR $MODEL_DIR
 
-ENV TRANSFORMERS_CACHE=${MODEL_DIR} \
+ENV TRANSFORMERS_CACHE=${CACHE_DIR} \
     TRANSFORMERS_VERBOSITY=error
 
 RUN python load_model.py
 
-CMD ["lambda_function.lambda_handler"]
+CMD ["python", "entry.py"]
