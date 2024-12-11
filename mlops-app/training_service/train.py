@@ -4,10 +4,10 @@ import mlflow
 from hydra.utils import instantiate
 from omegaconf import OmegaConf
 
-from tracking_service import logging
+from tracking_service import tracking
 
 class Trainer():
-    def __init__(self, cfg, model, train_dataloader, val_dataloader):
+    def __init__(self, cfg, model, train_dataloader):
         self.model = model
         self.params_to_log = dict(cfg)
         self.num_epochs = cfg.training.num_epochs 
@@ -19,13 +19,12 @@ class Trainer():
         self.metric = instantiate(cfg.training.metric.accuracy)
 
         self.train_dataloader = train_dataloader
-        self.val_dataloader = val_dataloader
        
     def train_model(self, exp_id):
         with mlflow.start_run(experiment_id=exp_id):
-            logging.log_parameters(self.params_to_log) 
-            logging.log_dataset()
-            return self.training_loop(self.train_dataloader, self.val_dataloader)
+            tracking.log_parameters(self.params_to_log) 
+            tracking.log_dataset()
+            return self.training_loop(self.train_dataloader)
 
     def training_loop(self, train_dataloader):
         for epoch in tqdm(range(self.num_epochs)):
@@ -51,9 +50,9 @@ class Trainer():
             train_loss = train_loss / len(train_dataloader)
             train_acc = self.metric(torch.tensor(all_labels), torch.tensor(all_preds))
             
-            logging.log_training_metrics(train_loss, train_acc, epoch)
+            tracking.log_training_metrics(train_loss, train_acc, epoch)
 
-        model_info = logging.log_model(self.model)
+        model_info = tracking.log_model(self.model)
 
         return model_info.model_uri
     

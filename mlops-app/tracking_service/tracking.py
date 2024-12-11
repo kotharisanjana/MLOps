@@ -3,7 +3,7 @@ import mlflow
 def log_parameters(params):
     mlflow.log_param("model", params["model"]["pretrained"]["model"])
     mlflow.log_param("tokenizer", params["model"]["pretrained"]["tokenizer"])
-    mlflow.log_param("batch_size", params["data"]["configuration"]["batch_size"])
+    mlflow.log_param("train_batch_size", params["data"]["configuration"]["train_batch_size"])
     mlflow.log_param("max_length", params["data"]["configuration"]["max_length"])
     mlflow.log_param("train_size", params["data"]["size"]["train_size"])
     mlflow.log_param("epochs", params["training"]["num_epochs"])
