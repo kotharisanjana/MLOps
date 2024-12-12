@@ -1,8 +1,0 @@
-defaults:
-  - default 
-
-num_epochs: 5
-
-optimizer:
-  lr: 1e-3
-

@@ -1,9 +1,0 @@
-dataset: cola
-
-configuration:
-  batch_size: 4
-  max_length: 128
-
-size:
-  train_size: 128
-  val_size: 32
