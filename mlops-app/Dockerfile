@@ -14,6 +14,4 @@ RUN mkdir $CACHE_DIR $MODEL_DIR
 ENV TRANSFORMERS_CACHE=${CACHE_DIR} \
     TRANSFORMERS_VERBOSITY=error
 
-RUN python load_model.py
-
-CMD ["python", "entry.py"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=3000"]

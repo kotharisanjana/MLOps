@@ -4,7 +4,6 @@ import mlflow
 import dagshub
 import hydra
 import random
-from hydra.core.hydra_config import HydraConfig
 from prometheus_client import Gauge, Counter
 from omegaconf import DictConfig, OmegaConf
 
@@ -12,6 +11,7 @@ from data_service.data import Data
 from model_service.model import Model
 from training_service.train import Trainer
 from prediction_service.inference import Inference
+from model_download import download_model
 
 app = Flask(__name__)
 
@@ -23,7 +23,7 @@ INVOCATIONS = Counter("invocation_count", "Number of invocations")
 
 @app.route('/')
 def hello():
-    return 'Hello, World!'
+    return "MLOps pipeline project"
 
 def initialize_hydra():
     global cfg
@@ -58,14 +58,15 @@ def train_model():
 
     trainer = Trainer(cfg, model, train_dataloader)
     model_uri = trainer.train_model(exp_id)
-    
-    if not HydraConfig.initialized():
-        HydraConfig.instance().set_config(cfg)
-        
-    config_path = os.path.join(hydra.utils.get_original_cwd(), "configs/model/default.yaml")
+           
+    config_path = os.path.join(os.getcwd(), "configs/model/default.yaml")
     custom_cfg = OmegaConf.load(config_path)
     custom_cfg.trained = DictConfig({"model_uri": model_uri})
     OmegaConf.save(custom_cfg, config_path)
+
+    download_model()
+
+    return "Model training completed!"
 
 @app.route('/inference')
 def inference():
@@ -81,6 +82,8 @@ def inference():
 
     ACCURACY.set(random.random())
     INVOCATIONS.inc()
+
+    return "Inference completed" 
 
 
 

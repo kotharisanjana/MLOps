@@ -21,3 +21,5 @@ class Inference:
                 predicted_labels = torch.argmax(logits, dim=1)  
 
             predictions.extend(predicted_labels)
+
+        return predictions
