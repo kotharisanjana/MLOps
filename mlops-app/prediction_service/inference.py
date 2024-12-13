@@ -1,6 +1,11 @@
 import torch
 import os 
+import time
+from prometheus_client import Gauge
+
 from model_service.model import Model
+
+ACCURACY = Gauge("prediction_accuracy", "Accuracy of the model")
 
 class Inference:
     def __init__(self, cfg):
@@ -10,16 +15,17 @@ class Inference:
         self.model.eval()
 
     def predict(self, test_dataloader):
-        predictions = []
-
         for batch in test_dataloader:
             input_ids = batch["input_ids"]
             attention_mask = batch["attention_mask"]
+            y_true = batch["label"]
         
             with torch.no_grad():
                 logits = self.model(input_ids, attention_mask)
-                predicted_labels = torch.argmax(logits, dim=1)  
+                y_pred = torch.argmax(logits, dim=1) 
 
-            predictions.extend(predicted_labels)
+                batch_acc = (y_pred == y_true).float().mean()
 
-        return predictions
+                ACCURACY.set(batch_acc)
+            
+            time.sleep(2)

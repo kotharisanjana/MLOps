@@ -3,8 +3,6 @@ import os
 import mlflow
 import dagshub
 import hydra
-import random
-from prometheus_client import Gauge, Counter
 from omegaconf import DictConfig, OmegaConf
 
 from data_service.data import Data
@@ -18,8 +16,6 @@ app = Flask(__name__)
 cfg = None
 
 dagshub.init(repo_owner='sanjanak98', repo_name='MLOps', mlflow=True)
-ACCURACY = Gauge("prediction_accuracy", "Accuracy of the model")
-INVOCATIONS = Counter("invocation_count", "Number of invocations")
 
 @app.route('/')
 def hello():
@@ -78,10 +74,7 @@ def inference():
     data.prepare_testing_data()
     test_dataloader = data.setup_testing_dataloader()
 
-    predictions = inferencing_instance.predict(test_dataloader)
-
-    ACCURACY.set(random.random())
-    INVOCATIONS.inc()
+    inferencing_instance.predict(test_dataloader)
 
     return "Inference completed" 
 
