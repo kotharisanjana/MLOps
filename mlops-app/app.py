@@ -99,9 +99,7 @@ def train_task():
 
 @app.route("/model-training")
 def train_model():
-    print("insidetrain api")
     if check_if_retrain():
-        print("retraining")
         training_thread = threading.Thread(target=train_task)
         training_thread.start()
         
