@@ -17,19 +17,33 @@ from model_download import download_model
 app = Flask(__name__)
 
 cfg = None
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
-dagshub.init(repo_owner='sanjanak98', repo_name='MLOps', mlflow=True)
+redis_client = redis.StrictRedis(host="localhost", port=6379, db=0, decode_responses=True)
+dagshub.init(repo_owner="sanjanak98", repo_name="MLOps", mlflow=True)
+training_complete_event = threading.Event() 
 
-@app.route('/')
-def hello():
-    return "MLOps pipeline project"
+def clear_redis_cache():
+    redis_client.delete("last_train_time")
+    print("Redis cache cleared on server restart.")
+
+def create_app():
+    app = Flask(__name__)
+
+    clear_redis_cache()
+
+    @app.route("/")
+    def start():
+        return "MLOps pipeline project"
+
+    return app
+
+app = create_app()
 
 def initialize_hydra():
     global cfg
     with hydra.initialize(config_path="configs"):
         cfg = hydra.compose(config_name="config")
         if cfg is None:
-            raise ValueError("Hydra configuration loading failed, 'cfg' is None")
+            raise ValueError("Hydra configuration loading failed, cfg is None")
         
 initialize_hydra()
 
@@ -48,11 +62,14 @@ def check_if_retrain():
 
     if last_train_timestamp is not None:
         last_train_time = datetime.fromisoformat(last_train_timestamp)
-        if current_timestamp - last_train_time < timedelta(minutes=30):
+        if current_timestamp - last_train_time < timedelta(minutes=1):
             return False
         else:
             redis_client.set("last_train_time", current_timestamp.isoformat())
             return True
+    else:
+        redis_client.set("last_train_time", current_timestamp.isoformat())
+        return True
         
 def train_task():
     exp_name = "mlops"
@@ -78,16 +95,23 @@ def train_task():
 
     download_model()
 
-@app.route('/model-training')
+    training_complete_event.set()
+
+@app.route("/model-training")
 def train_model():
+    print("insidetrain api")
     if check_if_retrain():
+        print("retraining")
         training_thread = threading.Thread(target=train_task)
         training_thread.start()
+        
+        training_complete_event.wait()
+
         return "Model training completed!"
     else:
         return "Training not triggered as it occurred less than 30 minutes ago."
 
-@app.route('/inference')
+@app.route("/inference")
 def inference():
     global cfg
 

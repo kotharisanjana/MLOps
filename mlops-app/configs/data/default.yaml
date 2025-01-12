@@ -4,3 +4,6 @@ configuration:
   train_batch_size: 8
   test_batch_size: 4
   max_length: 128
+
+size:
+  train_size: 128

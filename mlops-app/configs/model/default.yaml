@@ -3,4 +3,4 @@ pretrained:
   tokenizer: google/bert_uncased_L-2_H-128_A-2
 output_classes: 2
 trained:
-  model_uri: runs:/e4b1eb5599814470ae30e0ec0e26be12/classification_model
+  model_uri: runs:/568142ea50184562b5a60bc9f806fd24/classification_model
