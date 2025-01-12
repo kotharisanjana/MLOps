@@ -10,10 +10,7 @@ def load_model_uri_from_config():
     cfg = OmegaConf.load(config_path)
     return cfg.trained.model_uri
 
-def download_model(model_uri):
-    model = mlflow.pytorch.load_model(model_uri)
-    torch.save(model.state_dict(), os.path.join(os.getcwd(),  "models/model.pth"))
-
-if __name__ == "__main__":
+def download_model():
     model_uri = load_model_uri_from_config()
-    download_model(model_uri)
+    model = mlflow.pytorch.load_model(model_uri)
+    torch.save(model.state_dict(), os.path.join(os.getcwd(), "models/model.pth"))
