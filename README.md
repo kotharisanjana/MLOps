@@ -43,12 +43,12 @@ MLOps is the practice of automating and streamlining the complete lifecycle of M
    
    b. **YACE exporter** (to export operational metrics to prometheus)
       - Installation: [Doc 1](https://dev.to/setevoy/prometheus-yet-another-cloudwatch-exporter-collecting-aws-cloudwatch-metrics-50hd), [Doc 2](https://itnext.io/prometheus-yet-another-cloudwatch-exporter-collecting-aws-cloudwatch-metrics-806bd34818a8)
-      - Config file: ```sudo nano /mnt/tig-vol/volumes/tig/exporters/cw-yace/config.yml```
+      - Config file: ```nano /mnt/tig-vol/volumes/tig/exporters/cw-yace/config.yml```
         
    c. **Prometheus**
       - Installation: [Doc 1](https://codewizardly.com/prometheus-on-aws-ec2-part1/)
-      - Config file: ```sudo nano /etc/prometheus/prometheus.yml```
-      - Alert rules file: ```sudo nano /etc/prometheus/alert_rules.yml``` 
+      - Config file: ```nano /etc/prometheus/prometheus.yml```
+      - Alert rules file: ```nano /etc/prometheus/alert_rules.yml``` 
       - Web URL: ```localhost:9090/```
         
    d. **Prometheus Alertmanager**
@@ -58,19 +58,19 @@ MLOps is the practice of automating and streamlining the complete lifecycle of M
           - wget https://github.com/prometheus/alertmanager/releases/download/v0.27.0/alertmanager-0.27.0.linux-amd64.tar.gz
           - tar xvf alertmanager-0.27.0.linux-amd64.tar.gz
           ```
-      - Config file: ```sudo nano /etc/prometheus/alert_manager/alertmanager-0.27.0.linux-amd64/alertmanager.yml```
+      - Config file: ```nano /etc/prometheus/alert_manager/alertmanager-0.27.0.linux-amd64/alertmanager.yml```
       - Web URL: ```localhost:9093/```
       
    e. **Redis-server**
       - Installation:
         ```
-        - sudo yum groupinstall "Development Tools" -y
-        - sudo yum install -y tcl
+        - yum groupinstall "Development Tools" -y
+        - yum install -y tcl
         - wget http://download.redis.io/redis-stable.tar.gz
         - tar xzvf redis-stable.tar.gz
         - cd redis-stable
         - make
-        - sudo make install
+        - make install
         ```
 6. On completing all installations: ```bash start_services.sh ```
 7. Once application docker image is available in ECR repository (perform these steps only if github actions do not automate it):
