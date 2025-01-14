@@ -1,0 +1,11 @@
+groups:
+  - name: ml_model_alerts
+    rules:
+      - alert: ModelAccuracyLow
+        expr: prediction_accuracy < 0.75
+        for: 0s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Model accuracy is below the acceptable threshold"
+          description: "The model accuracy (currently {{ $value }}) has fallen below 0.75"

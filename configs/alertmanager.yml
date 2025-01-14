@@ -1,0 +1,12 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: []
+  receiver: 'test-webhook-receiver'
+
+receivers:
+  - name: 'test-webhook-receiver'
+    webhook_configs:
+      - url: 'localhost:5000/model-training'
+        send_resolved: true
