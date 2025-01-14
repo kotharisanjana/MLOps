@@ -3,7 +3,7 @@ import torch
 import os
 from omegaconf import OmegaConf
 
-mlflow.set_tracking_uri("https://dagshub.com/sanjanak98/MLOps.mlflow")
+mlflow.set_tracking_uri("") # set Dagshub MLflow URL
 
 def load_model_uri_from_config():
     config_path = os.path.join(os.getcwd(), "configs/model/default.yaml")
