@@ -7,7 +7,7 @@ from model_service.model import Model
 
 ACCURACY = Gauge("prediction_accuracy", "Accuracy of the model")
 
-class Inference:
+class Prediction:
     def __init__(self, cfg):
         self.model = Model(cfg)
         state_dict = torch.load(os.path.join(os.getcwd(), "models/model.pth"))

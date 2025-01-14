@@ -11,32 +11,26 @@ from omegaconf import DictConfig, OmegaConf
 from data_service.data import Data
 from model_service.model import Model
 from training_service.train import Trainer
-from prediction_service.inference import Inference
+from prediction_service.prediction import Prediction
 from model_download import download_model
 
 app = Flask(__name__)
 
 cfg = None
 redis_client = redis.StrictRedis(host="localhost", port=6379, db=0, decode_responses=True)
-dagshub.init(repo_owner="sanjanak98", repo_name="MLOps", mlflow=True)
+dagshub.init(repo_owner="", repo_name="", mlflow=True) # Enter dagshub repo_owner and repo_name
 training_complete_event = threading.Event() 
-
-def clear_redis_cache():
-    redis_client.delete("last_train_time")
-    print("Redis cache cleared on server restart.")
 
 def create_app():
     app = Flask(__name__)
 
-    clear_redis_cache()
+    redis_client.delete("last_train_time")
 
     @app.route("/")
     def start():
         return "MLOps pipeline project"
 
     return app
-
-app = create_app()
 
 def initialize_hydra():
     global cfg
@@ -45,6 +39,7 @@ def initialize_hydra():
         if cfg is None:
             raise ValueError("Hydra configuration loading failed, cfg is None")
         
+app = create_app()
 initialize_hydra()
 
 def get_or_create_experiment_id(exp_name):
@@ -62,7 +57,7 @@ def check_if_retrain():
 
     if last_train_timestamp is not None:
         last_train_time = datetime.fromisoformat(last_train_timestamp)
-        if current_timestamp - last_train_time < timedelta(minutes=1):
+        if current_timestamp - last_train_time < timedelta(minutes=10):
             return False
         else:
             redis_client.set("last_train_time", current_timestamp.isoformat())
@@ -107,19 +102,19 @@ def train_model():
 
         return "Model training completed!"
     else:
-        return "Training not triggered as it occurred less than 30 minutes ago."
+        return "Training not triggered as it occurred less than 10 minutes ago."
 
 @app.route("/inference")
 def inference():
     global cfg
 
-    inferencing_instance = Inference(cfg)
+    pred_instance = Prediction(cfg)
     data = Data(cfg)
     data.load_testing_data()
     data.prepare_testing_data()
     test_dataloader = data.setup_testing_dataloader()
 
-    inferencing_instance.predict(test_dataloader)
+    pred_instance.predict(test_dataloader)
 
     return "Inference completed" 
 
