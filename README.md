@@ -58,7 +58,7 @@ MLOps is the practice of automating and streamlining the complete lifecycle of M
           - wget https://github.com/prometheus/alertmanager/releases/download/v0.27.0/alertmanager-0.27.0.linux-amd64.tar.gz
           - tar xvf alertmanager-0.27.0.linux-amd64.tar.gz
           ```
-      - Config file: ```nano /etc/prometheus/alert_manager/alertmanager-0.27.0.linux-amd64/alertmanager.yml```
+      - Config file: ```nano /etc/prometheus/alertmanager-0.27.0.linux-amd64/alertmanager.yml```
       - Web URL: ```localhost:9093/```
       
    e. **Redis-server**
