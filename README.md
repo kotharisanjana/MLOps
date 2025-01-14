@@ -1,4 +1,4 @@
-# MLOps 
+# Comprehensive MLOps Infrastructure: From Training to Deployment on AWS 
 
 MLOps is the practice of automating and streamlining the complete lifecycle of ML models, from development and experimentation to deployment and monitoring. This project presents a robust MLOps pipeline that integrates essential tools for experiment tracking, configuration management, containerization, automated CI/CD, and real-time monitoring. Designed to address the challenges of managing models in production, this pipeline simplifies the process of taking ML models from training to deployment and serves as a practical guide for implementing similar workflows.
 
