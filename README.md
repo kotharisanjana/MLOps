@@ -25,7 +25,7 @@ MLOps is the practice of automating and streamlining the complete lifecycle of M
 7. Run flask application: ```flask run```
 8. For training: ```localhost:5000/model-training```
 9. For inference: ```localhost:5000/inference```
-10. On push to github repositoy, github actions is trigerred which deploys application to EC2
+10. On push/merge, github actions is trigerred which deploys application to EC2
 
 ### Cloud setup 
 **(services configuration files in /configs and EC2 policy files in /policies)**
