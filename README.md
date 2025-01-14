@@ -81,7 +81,7 @@ MLOps is the practice of automating and streamlining the complete lifecycle of M
 8. To shut down all services: ```bash stop_services.sh``` 
 
 ## Future scope
-1. **Feature Store Integration:** Incorporate a feature store like Feast to manage, version, and serve consistent features for training and inference.
+1. **Feature Store Integration:** Incorporate a feature store to manage, version, and serve consistent features for training and inference.
 2. **A/B Testing:** Implement A/B testing to compare model variants in production and deploy the best-performing version.
-3. **Modular Packaging:** Package the pipeline components into reusable modules that can be easily imported into other projects.
+3. **Modular Packaging:** Package the pipeline components into reusable modules that can be easily imported and customized into other projects.
 4. **Enhanced Monitoring:** Monitor data drift, concept drift, covariate shift, data quality metrics, etc.
