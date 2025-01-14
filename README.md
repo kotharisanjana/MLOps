@@ -34,11 +34,10 @@ MLOps is the practice of automating and streamlining the complete lifecycle of M
    - 9090 (Prometheus)
    - 9093 (Prometheus Alertmanager)
    - 3000 (Flask application)
-   - 5000 (YACE exporter)
-4. Set below 2 policies for the EC2 instance:
+3. Set below 2 policies for the EC2 instance:
    - Cloudwatch policy
    - ECR policy
-5. Install following services on EC2: <br>
+4. Install following services on EC2: <br>
    a. **Docker**
    
    b. **YACE exporter** (to export operational metrics to prometheus)
@@ -72,14 +71,14 @@ MLOps is the practice of automating and streamlining the complete lifecycle of M
         - make
         - make install
         ```
-6. On completing all installations: ```bash start_services.sh ```
-7. Once application docker image is available in ECR repository (perform these steps only if github actions do not automate it):
+5. On completing all installations: ```bash start_services.sh ```
+6. Once application docker image is available in ECR repository (perform these steps only if github actions do not automate it):
     - Pull image on EC2: ```docker pull <aws_account_id>.dkr.ecr.<your-region>.amazonaws.com/<your-repository-name>:<tag>```
     - Run image: ```docker run -it -p 3000:3000 –-network host <aws_account_id>.dkr.ecr.<your-region>.amazonaws.com/<your-repository-name>:<tag>```
-8. To call APIs:
+7. To call APIs:
    - `http://<ec2-public-address>:3000/model-training` (when running the application for the first time - saves trained model in /models)
    - `http://<ec2-public-address>:3000/inference`
-9. To shut down all services: ```bash stop_services.sh``` 
+8. To shut down all services: ```bash stop_services.sh``` 
 
 ## Future scope
 1. **Feature Store Integration:** Incorporate a feature store like Feast to manage, version, and serve consistent features for training and inference.
